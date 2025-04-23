@@ -1,0 +1,60 @@
+def adjust_textbox_size(event=None):
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+
+    # Calculate dimensions for a 16:9 aspect ratio
+    text_box_width = screen_width
+    text_box_height = (7 * screen_height) // 16  # Reduce the height of the text box
+
+    # Set the new geometry for the text box
+    text_output.config(width=text_box_width, height=text_box_height)
+
+def start_game():
+    global root
+    root.destroy()
+    root = tk.Tk()
+    root.title("Escape The Dungeon")
+    root.attributes('-fullscreen', False)
+    root.geometry("800x300") 
+
+    text_output = tk.Text(root, height=6., width=100, font=("Helvetica", 20))
+    text_output.pack(anchor=tk.CENTER)
+
+    # Bind the fullscreen event to adjust the text box size
+    root.bind("<Configure>", adjust_textbox_size)
+
+    initial_story = """
+    You wake up in chains, trapped in a dungeon.
+    As you look around, 
+    you see an unknown man, a rusty saw to your left, 
+    and a key on the far side of the room.
+    With no hope of escape 
+    unless one of you takes drastic action,
+    the rusty saw gleams in the dim light.
+    What will you do?"""
+    insert_with_delay(text_output, initial_story)
+
+    button_saw_off = tk.Button(root, text="Saw Off Your Own Hand", command=lambda: saw_off_own_hand(text_output))
+    button_saw_off.pack()
+
+    button_give_saw = tk.Button(root, text="Give the Saw to the Other Man", command=lambda: give_saw_to_other_man(text_output))
+    button_give_saw.pack()
+
+    button_wait_rescue = tk.Button(root, text="Wait to be Rescued", command=lambda: stay_trapped_forever(text_output))
+    button_wait_rescue.pack()
+
+def main():
+    global root
+    root = tk.Tk()
+    root.title("Escape The Dungeon")
+    root.attributes('-fullscreen', False)
+
+    root.geometry("800x300")  
+
+    title_label = tk.Label(root, text="Welcome to Escape The Dungeon", font=("Helvetica", 20))
+    title_label.pack(pady=100)
+
+    start_button = tk.Button(root, text="Start Game", command=start_game)
+    start_button.pack()
+
+    root.mainloop()
